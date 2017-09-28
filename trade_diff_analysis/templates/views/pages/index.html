@@ -1,0 +1,57 @@
+{% extends 'trade_diff_analysis/templates/views/layout/master.html' %}
+
+{% block content %}
+        
+    <div class="row" id="trade-diff-year-selection">
+
+        <form method="post" action="{% url 'selectYear' %}">
+
+            {% csrf_token %}
+    
+            <div class="col-md-offset-1 col-md-4">
+
+                <div class="form-group">
+
+                    <label for="from-year">Select From Year:</label>
+                    <select class="form-control" id="from-year" name="from_year">
+                        <option>2011</option>
+                        <option>2012</option>
+                        <option>2013</option>
+                        <option>2014</option>
+                        <option>2015</option>
+                        <option>2016</option>
+                    </select>
+                    
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="form-group">
+
+                    <label for="to-year">Select To Year:</label>
+                    <select class="form-control" id="to-year" name="to_year">
+                        <option>2011</option>
+                        <option>2012</option>
+                        <option>2013</option>
+                        <option>2014</option>
+                        <option>2015</option>
+                        <option>2016</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2" style="position: relative; top: 25px;">
+
+                <button type="submit" class="btn  btn-block btn-custom">Submit</button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock %}

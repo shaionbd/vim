@@ -1,0 +1,178 @@
+{% extends 'feature_extraction/templates/views/layout/master.html' %}
+
+{% block content %}
+
+    <div class="main-body">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <div class="left-col">
+
+                    <h1 class="text-center">VIM</h1>
+                    <p class="text-center">A Web Tool for Data Visualization and Knowledge Mining</p>
+                    <br>
+                    <h3 class="text-center">Upload CSV File</h3>
+
+                    <form method="post" action="{% url 'featureExtractionUpload' %}" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        <div class="form-group">
+
+                            <input type="file" name="csv_file" class="file">
+
+                            <div class="input-group col-sm-10 col-sm-offset-1">
+
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
+                                <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+                                <span class="input-group-btn">
+                                    <button type="button" class="browse btn btn-success input-lg"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button type="submit" style="margin-left: 10px;" class=" btn btn-success input-lg"><i class="glyphicon glyphicon-upload"></i> Upload</button>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+            
+        </div>
+
+    </div>
+
+    <hr>
+        
+    <div class="row">
+
+        <div class="col-sm-4 col-md-3 sidebar">
+
+            <div class="mini-submenu">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </div>
+
+            <div class="list-group">
+                <span href="#" class="list-group-item active" style="background-color: #66BB6A; border-color: #66BB6A;">
+                    Features
+                    <span class="pull-right" id="slide-submenu">
+                        <i class="fa fa-times"></i>
+                    </span>
+                </span>
+                <form action="{% url 'featuresExtractionProcess'  %}" method="post">
+
+                    {% csrf_token %}
+
+                    <a href="#" class="list-group-item">
+                        <button type="submit" class="btn btn-block btn-custom">Process</button>
+                    </a>
+
+                    {% for feature in features %}
+
+                        <a href="#" class="list-group-item">
+
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="features[]" value="{{ feature }}">{{ feature }}</label>
+                            </div>
+
+                        </a>
+
+                    {% endfor %}
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-8 col-md-8">
+
+            <div style="margin-top: 3%" class="row">
+
+                <div class="feature-table">
+
+                    {% if is_process %}
+
+                        {% include "feature_extraction/templates/views/table.html" %}
+                        
+                    {% else %}
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <h2 class="text-center">Please select features and hit the process button</h2>
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            {% if is_process %}
+
+                <div style="margin-bottom: 3%;">
+
+                    <a href="#" onclick="associateRule(); return false;" class="btn btn-custom name-btn">Associate Rules</a>
+
+                    {% load staticfiles %}
+                    <a href="{% static export_url %}" download="{% static export_url %}" class="btn btn-custom csv-btn">Export As CSV</a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="associate-rule"></div>
+
+{% endblock %}
+
+{% block js %}
+
+    <script type="text/javascript">
+
+        function associateRule() 
+        {
+            $.ajax({
+                
+                type: "GET",
+                url: "{% url 'associateRule' %}",
+                cache: false,
+                success: function(result)
+                {
+                    // console.log(result);
+
+                    var rule = $('<div class="panel panel-success">');
+                    var contents = "";
+                    
+                    contents += '<div class="panel-heading"><h3 class="panel-title text-center">Rules</h3></div>';
+                    contents += '<div class="panel-body" style="text-align: justify;">' + result + '</div></div>';
+
+                    rule.append(contents);
+                    
+                    $(".associate-rule").append(rule);
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+{% endblock %}

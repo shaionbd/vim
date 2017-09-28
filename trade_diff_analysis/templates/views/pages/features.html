@@ -1,0 +1,193 @@
+{% extends 'trade_diff_analysis/templates/views/layout/master.html' %}
+
+{% block content %}
+
+    <div class="row" id="trade-diff-year-selection">
+
+        <form method="post" action="{% url 'selectYear' %}">
+
+            {% csrf_token %}
+
+            <div class="col-md-offset-1 col-md-4">
+
+                <div class="form-group">
+
+                    <label for="from-year">Select From Year:</label>
+                    <select class="form-control" id="from-year" name="from_year">
+                        <option>2011</option>
+                        <option>2012</option>
+                        <option>2013</option>
+                        <option>2014</option>
+                        <option>2015</option>
+                        <option>2016</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="form-group">
+
+                    <label for="to-year">Select To Year:</label>
+                    <select class="form-control" id="to-year" name="to_year">
+                        <option>2011</option>
+                        <option>2012</option>
+                        <option>2013</option>
+                        <option>2014</option>
+                        <option>2015</option>
+                        <option>2016</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2" style="position: relative; top: 25px;">
+
+                <button type="submit" class="btn btn-block btn-custom">Submit</button>
+
+            </div>
+
+        </form>
+
+    </div>
+    
+    <div class="row">
+
+        <div class="col-sm-4 col-md-3 sidebar">
+
+            <div class="mini-submenu">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </div>
+
+            <div class="list-group">
+
+                <span href="#" class="list-group-item active" style="background-color: #66BB6A; border-color: #66BB6A;">
+                    Feature List ({{ from_year }})
+                </span>
+
+                {% for feature in from_year_features %}
+
+                    <a href="#" class="list-group-item">
+
+                        <div class="checkbox">
+                            <label><input name="from_feature" onclick="showGraph($(this));" type="radio" data-year="{{ from_year }}" data-year-status="from_year" value="{{ feature }}">{{ feature }}</label>
+                        </div>
+                        
+                    </a>
+                    
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-4 col-md-3 sidebar">
+
+            <div class="mini-submenu">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </div>
+
+            <div class="list-group">
+
+                <span href="#" class="list-group-item active" style="background-color: #66BB6A; border-color: #66BB6A;">
+                    Feature List ({{ to_year }})
+                </span>
+
+                {% for feature in to_year_features %}
+
+                    <a href="#" class="list-group-item">
+
+                        <div class="checkbox">
+                            <label><input name="to_feature" onclick="showGraph($(this));" type="radio" data-year="{{ to_year }}" data-year-status="to_year" value="{{ feature }}">{{ feature }}</label>
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-4 col-md-6">
+
+            <div id="from-year-graph-visualization-header" class="text-center"></div>
+            <div id="from-year-graph-visualization"></div>
+
+            <div id="to-year-graph-visualization-header" class="text-center" style="position: relative; top: 50px;"></div>
+            <div id="to-year-graph-visualization"></div>
+            
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+
+    <script type="text/javascript">
+
+        function showGraph(sys) 
+        {
+            var feature = sys.attr("value");
+            var year = sys.attr("data-year");
+            var year_status = sys.attr("data-year-status");
+            var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+            function csrfSafeMethod(method) 
+            {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+            $.ajaxSetup({
+
+                beforeSend: function(xhr, settings) 
+                {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) 
+                    {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+
+                }
+
+            });
+
+            $.ajax({
+                
+                type: "POST",
+                url: "{% url 'tradeDiffGraphVisualization' %}",
+                cache: false,
+                data: {"feature": feature, "year": year, "year_status": year_status},
+                success: function(result)
+                {
+                    //console.log(result);
+                    var img = '<img src="'+result+'" class="img-responsive" />';
+
+                    if (year_status == 'from_year') 
+                    {
+                        $('#from-year-graph-visualization-header').html('<h2>'+year+'('+feature+'):'+'</h2>');
+                        $('#from-year-graph-visualization').html(img);
+                    } 
+                    else 
+                    {
+                        $('#to-year-graph-visualization-header').html('<h2>'+year+'('+feature+'):'+'</h2>');
+                        $('#to-year-graph-visualization').html(img);
+                    }
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+{% endblock %}

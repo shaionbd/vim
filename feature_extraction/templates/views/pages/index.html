@@ -1,0 +1,53 @@
+{% extends 'feature_extraction/templates/views/layout/master.html' %}
+
+{% block content %}
+        
+    <div class="main-body">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <div class="left-col">
+
+                    <h1 class="text-center">VIM</h1>
+                    <p class="text-center">A Web Tool for Data Visualization and Knowledge Mining</p>
+                    <br>
+                    <h3 class="text-center">Upload CSV File</h3>
+
+                    <form method="post" action="{% url 'featureExtractionUpload' %}" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        <div class="form-group">
+
+                            <input type="file" name="csv_file" class="file">
+
+                            <div class="input-group col-sm-10 col-sm-offset-1">
+
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
+                                <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+                                <span class="input-group-btn">
+                                    <button type="button" class="browse btn btn-success input-lg"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button type="submit" style="margin-left: 10px;" class=" btn btn-success input-lg"><i class="glyphicon glyphicon-upload"></i> Upload</button>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+            
+        </div>
+
+    </div>
+
+    <hr>
+
+{% endblock %}

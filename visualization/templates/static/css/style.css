@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700,900');
+
+body{
+	font-family: 'Lato', sans-serif;
+}
+
+
+/*navigation bar*/
+.navbar{
+	min-height: 80px;
+	background: #66BB6A;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #fff;
+}
+.navbar-inverse .navbar-nav>li>a {
+    color: #fff;
+}
+.navbar-inverse{
+	border-color: transparent;
+}
+.navbar-nav>li>a {
+    line-height: 50px;
+}
+
+.navbar-brand {
+    line-height: 50px;
+}
+
+.navbar-toggle{
+	margin-top: 22px;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
+    color: #fff;
+    background-color: #2E7D32;
+}
+
+
+.main-body{
+	background: #eee;
+	margin-top: 150px;
+	margin-bottom: 100px;
+}
+
+.main-body .left-col{
+	padding: 50px;
+}
+
+.main-body .left-col h1{
+	color: #4CAF50;
+	font-weight: bold;
+}
+
+.main-body .left-col p{
+	font-weight: 400;
+	font-size: 18px;
+}
+
+.main-body .left-col .btn-custom{
+	background: #4CAF50;
+	color: #fff;
+}
+
+
+/* file upload */
+
+
+.file {
+  visibility: hidden;
+  position: absolute;
+}
+
+.left-col h3{
+	color: #4CAF50;
+}
