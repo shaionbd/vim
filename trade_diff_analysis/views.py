@@ -7,6 +7,8 @@ import os, glob, time
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # Create your views here.
@@ -29,8 +31,9 @@ def index(request):
 def getFeature(request):
 
     BASE = os.path.dirname(os.path.abspath(__file__))
-    df_from_year = pd.read_csv(BASE + "/templates/trade_diff_files/" + request.POST["from_year"] + ".csv")
-    df_to_year = pd.read_csv(BASE + "/templates/trade_diff_files/" + request.POST["to_year"] + ".csv")
+    df_from_year = pd.read_csv(BASE + "/templates/trade_diff_files/" + request.POST["from_year"] + ".csv", encoding = "ISO-8859-1")
+    df_to_year = pd.read_csv(BASE + "/templates/trade_diff_files/" + request.POST["to_year"] + ".csv", encoding = "ISO-8859-1")
+
 
     featureListFromYear = list(df_from_year)
     featureListToYear = list(df_to_year)
@@ -60,9 +63,9 @@ def getGraphVisualization(request):
     # return HttpResponse(request.POST["feature"])
 
     BASE = os.path.dirname(os.path.abspath(__file__))
-    df = pd.read_csv(BASE + "/templates/trade_diff_files/" + request.POST["year"] + ".csv")
+    df = pd.read_csv(BASE + "/templates/trade_diff_files/" + request.GET["year"] + ".csv", encoding = "ISO-8859-1")
     
-    input = request.POST["feature"]  # receive the post request
+    input = request.GET["feature"]  # receive the post request
     column = df[input]
 
     if np.issubdtype(column.dtype, np.number):
@@ -75,7 +78,7 @@ def getGraphVisualization(request):
         plt.xlabel(input)
         plt.ylabel('frequency')
 
-        if request.POST["year_status"] == "from_year":
+        if request.GET["year_status"] == "from_year":
 
             directory = BASE + "/templates/from_year_graphs/"
             os.chdir(directory)
@@ -103,7 +106,7 @@ def getGraphVisualization(request):
         plt.xlabel(input)
         plt.ylabel('frequency')
 
-        if request.POST["year_status"] == "from_year":
+        if request.GET["year_status"] == "from_year":
 
             directory = BASE + "/templates/from_year_graphs/"
             os.chdir(directory)
@@ -123,9 +126,10 @@ def getGraphVisualization(request):
 
             plt.savefig(BASE + "/templates/to_year_graphs/"+img)
 
-    if request.POST["year_status"] == "from_year":
+    if request.GET["year_status"] == "from_year":
         image = "/static/trade_diff_analysis/templates/from_year_graphs/"+img
     else:
         image = "/static/trade_diff_analysis/templates/to_year_graphs/"+img
 
     return HttpResponse(image)
+

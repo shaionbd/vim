@@ -7,6 +7,8 @@ import os, glob, time
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # Create your views here.
@@ -53,7 +55,7 @@ def getGraphVisualization(request):
     BASE = os.path.dirname(os.path.abspath(__file__))
     df = pd.read_csv(BASE + "/templates/upload_files/demo.csv")
 
-    input = request.POST['feature']  # receive the post request
+    input = request.GET['feature']  # receive the post request
     column = df[input]
 
     if np.issubdtype(column.dtype, np.number):
